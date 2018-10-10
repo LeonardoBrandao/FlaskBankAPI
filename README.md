@@ -26,8 +26,8 @@ Pronto, agora podemos criar nosso ambiente virtual
 Com o ambiente criado e ativado, vamos clonar nosso projeto e instalar suas dependências
 
 ```sh
-    $ git clone linkdoproj
-    $ cd pastadoproj
+    $ git clone https://github.com/LeonardoBrandao/FlaskBankAPI.git
+    $ cd FlaskBankAPI
     $ pip install -r requirements.txt
 ```
 
