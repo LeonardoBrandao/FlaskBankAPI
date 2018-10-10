@@ -54,4 +54,4 @@ Caso deseje usar o arquivo .sh de testes, rodar
 ```
 
 # Documentação
-Para consultar a documentação da API abra o arquivo ```api_doc.html``` localizado no root do projeto
+Para consultar a documentação da API abra o arquivo ```api_doc.html``` localizado na pasta docs
