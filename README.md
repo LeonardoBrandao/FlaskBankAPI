@@ -64,12 +64,12 @@ Para fazer uma requisição, podemos rodar o arquivo ```client.py``` com os segu
 | operacao | consultar a tabela abaixo |
 | parametros da operacao | consultar a tabela abaixo |
 
-| Operação | Parâmetros |
+| Operação | Parâmetros da operação |
 | ------ | ------ |
 | saldo | id_conta |
-| saque | id_conta - valor |
-| deposito | id_conta - valor |
-| transferencia | id_conta_origem - id_conta_destino - valor |
+| saque | id_conta valor |
+| deposito | id_conta valor |
+| transferencia | id_conta_origem id_conta_destino valor |
 
 Lembrando que os parametros devem ser separados por espaço
 
