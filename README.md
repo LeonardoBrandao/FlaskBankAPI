@@ -19,18 +19,17 @@ Agora devemos usar o package manager do python (pip) para instalar o virtualenv 
     $ sudo pip install virtualenv
 ```
 
-Pronto, agora podemos criar nosso ambiente virtual
+Pronto, agora podemos clonar o projeto e criar nosso ambiente virtual
 
 ```sh
-    $ sudo virtualenv venv
-    $ source venv/bin/activate
-```
-Com o ambiente criado e ativado, vamos clonar nosso projeto e instalar suas dependências
-
-```sh
-    $ cd venv
     $ git clone https://github.com/LeonardoBrandao/FlaskBankAPI.git
     $ cd FlaskBankAPI
+    $ sudo virtualenv venv
+    $ source ./venv/bin/activate
+```
+Com o ambiente criado e ativado, vamos instalar suas dependências
+
+```sh    
     $ pip install -r requirements.txt
 ```
 
