@@ -1,0 +1,146 @@
+# API Conta banco
+Essa API é um exemplo de interação com contas bancárias.
+
+# Contas
+Operações relacionadas a conta bancária.
+
+## Saldo [/contas/{id_conta}]
+
+Operação destinada a consultar o saldo de uma conta específica.
+
++ Parameters
+    + id_conta: `1` (required, string) - O id da conta.
+
+### Consultar o saldo de uma conta [GET]
+
++ Response 200 (application/json)
+
+        {
+            "id": "1",
+            "saldo": "1000"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "status": "FAIL",
+            "mensagem": "Conta inexistente."
+        }
+
+
+## Saque [/contas/{id_conta}/{valor}]
+
+Operação destinada a realizar um saque em uma conta específica.
+
++ Parameters
+    + id_conta: `1` (required, string) - O id da conta.
+    + valor: `150` (required, string) - O valor a ser sacado.
+
+### Realizar um saque em uma conta [PUT]
+
++ Response 200 (application/json)
+
+        {
+            "id": "1",
+            "saldo": "850"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_sacado": "0",
+            "mensagem": "Conta inexistente."
+        }
+
++ Response 406 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_sacado": "0",
+            "mensagem": "Saldo Insuficiente."
+        }
+
++ Response 500 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_sacado": "0",
+            "mensagem": "Valor deve ser um número e maior que 0."
+        }
+
+
+## Depósito [/contas/{id_conta}/{valor}]
+
+Operação destinada a realizar um depósito em uma conta específica.
+
++ Parameters
+    + id_conta: `1` (required, string) - O id da conta.
+    + valor: `150` (required, string) - O valor a ser sacado.
+
+### Realizar um depósito em uma conta [POST]
+
++ Response 200 (application/json)
+
+        {
+            "id": "1",
+            "saldo": "1150"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_depositado": "0",
+            "mensagem": "Conta inexistente."
+        }
+
++ Response 500 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_depositado": "0",
+            "mensagem": "Valor deve ser um número e maior que 0."
+        }
+
+## Transferência [/contas/transferencia/{id_conta_origem}/{id_conta_destino}/{valor}]
+
+Operação destinada a realizar uma transferência entre duas contas.
+
++ Parameters
+    + id_conta_origem: `1` (required, string) - O id da conta origem.
+    + id_conta_destino: `2` (required, string) - O id da conta destino.
+    + valor: `150` (required, string) - O valor a ser sacado.
+
+### Realizar uma transferência entre duas contas [POST]
+
++ Response 200 (application/json)
+
+        {
+            "status": "OK",
+            "valor_transferido": "150"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_transferido": "0",
+            "mensagem": "Conta inexistente."
+        }
+
++ Response 406 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_transferido": "0",
+            "mensagem": "Saldo Insuficiente."
+        }
+
++ Response 500 (application/json)
+
+        {
+            "status": "FAIL",
+            "valor_transferido": "0",
+            "mensagem": "Valor deve ser um número e maior que 0."
+        }
