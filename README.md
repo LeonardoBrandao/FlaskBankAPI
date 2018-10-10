@@ -4,6 +4,8 @@ Uma api simples para interagir com um array de contas.
 
 # Instalação dos requisitos e configurações
 
+Observação: Esse tutorial é feito com base em sistemas unix
+
 O projeto usa Python com o framework [Flask](http://flask.pocoo.org/).
   - Verificar que tenha Python 3.4 ou superior instalado. 
 ```sh
