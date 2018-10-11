@@ -95,8 +95,3 @@ Caso deseje ver o JSON de resposta, é necessário usar o Postman ou alguma ferr
 
 # Documentação
 Para consultar a documentação da API abra o arquivo ```api_doc.html``` localizado na pasta docs
-
-# Integrantes
-
-Leonardo L. R. T. Brandão - 31633528
-Felipe Estrela Cardoso - 31618375
