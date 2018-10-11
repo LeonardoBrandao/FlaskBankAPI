@@ -4,14 +4,14 @@ Essa API é um exemplo de interação com contas bancárias.
 # Contas
 Operações relacionadas a conta bancária.
 
-## Saldo [/contas/{id_conta}]
+## Contas [/contas/{id_conta}]
 
-Operação destinada a consultar o saldo de uma conta específica.
+Operação saldo, saque e depósito.
 
 + Parameters
     + id_conta: `1` (required, string) - O id da conta.
 
-### Consultar o saldo de uma conta [GET]
+### Saldo [GET]
 
 + Response 200 (application/json)
 
@@ -28,21 +28,21 @@ Operação destinada a consultar o saldo de uma conta específica.
         }
 
 
-## Saque [/contas/{id_conta}/{valor}]
+### Saque [PUT]
 
-Operação destinada a realizar um saque em uma conta específica.
++ Request (application/json)
 
-+ Parameters
-    + id_conta: `1` (required, string) - O id da conta.
-    + valor: `150` (required, string) - O valor a ser sacado.
+    + Body
 
-### Realizar um saque em uma conta [PUT]
+            {
+                "valor": 250.50
+            }
 
 + Response 200 (application/json)
 
         {
             "id": "1",
-            "saldo": "850"
+            "saldo": "749.5"
         }
 
 + Response 404 (application/json)
@@ -70,21 +70,21 @@ Operação destinada a realizar um saque em uma conta específica.
         }
 
 
-## Depósito [/contas/{id_conta}/{valor}]
+### Depósito [POST]
 
-Operação destinada a realizar um depósito em uma conta específica.
++ Request (application/json)
 
-+ Parameters
-    + id_conta: `1` (required, string) - O id da conta.
-    + valor: `150` (required, string) - O valor a ser sacado.
+    + Body
 
-### Realizar um depósito em uma conta [POST]
+            {
+                "valor": 350
+            }
 
 + Response 200 (application/json)
 
         {
             "id": "1",
-            "saldo": "1150"
+            "saldo": "1099.5"
         }
 
 + Response 404 (application/json)
@@ -103,16 +103,23 @@ Operação destinada a realizar um depósito em uma conta específica.
             "mensagem": "Valor deve ser um número e maior que 0."
         }
 
-## Transferência [/contas/transferencia/{id_conta_origem}/{id_conta_destino}/{valor}]
+## Transferência [/contas/transferencia/{id_conta_origem}/{id_conta_destino}]
 
 Operação destinada a realizar uma transferência entre duas contas.
 
 + Parameters
     + id_conta_origem: `1` (required, string) - O id da conta origem.
     + id_conta_destino: `2` (required, string) - O id da conta destino.
-    + valor: `150` (required, string) - O valor a ser sacado.
 
-### Realizar uma transferência entre duas contas [POST]
+### Transferência entre duas contas [POST]
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "valor": 150
+            }
 
 + Response 200 (application/json)
 
