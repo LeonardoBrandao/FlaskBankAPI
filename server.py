@@ -9,21 +9,49 @@ class Conta:
         self.id = id
         self.saldo = saldo
 
-    def saldo(self):
-        return self.saldo
+    def deposito(self, valor):
+        try:
+            valor = float(valor)
+        except ValueError:
+            return {"status": "FAIL", "valor_depositado": 0, "mensagem": "Valor deve ser um número."}, 500
 
-    def deposito(self, saldo):
-        self.saldo += saldo
+        if valor > 0:
+            self.saldo += valor
+            return {"id": self.id, "saldo": self.saldo}, 200
+        else:
+            return {"status": "FAIL", "valor_depositado": 0, "mensagem": "Valor deve ser maior que 0."}, 500
 
-    def saque(self, saldo):
-        self.saldo -= saldo
+    def saque(self, valor):
+        try:
+            valor = float(valor)
+        except ValueError:
+            return {"status": "FAIL", "valor_depositado": 0, "mensagem": "Valor deve ser um número."}, 500
+
+        if valor > 0:
+            if valor <= self.saldo:
+                self.saldo -= valor
+                return {"id": self.id, "saldo": self.saldo}, 200
+            else:
+                return {"status": "FAIL", "valor_sacado": 0, "mensagem": "Saldo Insuficiente."}, 406
+        else:
+            return {"status": "FAIL", "valor_sacado": 0, "mensagem": "Valor deve ser maior que 0."}, 500
 
     def __str__(self):
-        return 'id: {} - saldo: {}'.format(self.id, self.saldo)
+        return "id: {} - saldo: {}".format(self.id, self.saldo)
 
 contas = []
 for i in range(10):
     contas.append(Conta(i, 1000))
+
+def getConta(id):
+    try:
+        id = int(id)
+        if id < 0:
+            return None
+        return contas[id]
+    except:
+        return None
+
 
 app = Flask(__name__)
 
@@ -31,91 +59,49 @@ app = Flask(__name__)
 def hello():
     return "Servidor rodando! Agora, consulte a documentação."
 
-@app.route("/contas/<id>", methods=['GET'])
+@app.route("/contas/<id>", methods=["GET"])
 def get_saldo_conta(id):
-    try:
-        id = int(id)
-        if id < 0:
-            return jsonify({"status": 'FAIL', 'mensagem': 'Conta inexistente.'}), 404
-    except:
-        return jsonify({"status": 'FAIL', 'mensagem': 'Conta inexistente.'}), 404
-    try:
-        conta = contas[id]
-        return jsonify({"id": conta.id, "saldo": conta.saldo})
-    except Error:
-        return jsonify({"status": 'FAIL', 'mensagem': 'Conta Inexistente.'}), 404
-
-@app.route("/contas/<id>", methods=['POST'])
-def put_deposito_saldo_conta(id):
-    try:
-        id = int(id)
-        if id < 0:
-            return jsonify({"status": 'FAIL', "valor_depositado": 0, 'mensagem': 'Conta inexistente.'}), 404
-    except:
-        return jsonify({"status": 'FAIL', "valor_depositado": 0, 'mensagem': 'Conta inexistente.'}), 404
-    try:
-        valor = float(request.form['valor'])
-    except ValueError:
-        return jsonify({"status": 'FAIL', "valor_depositado": 0, 'mensagem': 'Valor deve ser um número e maior que 0.'}), 500
-    if valor > 0:
-        valor = float(request.form['valor'])
-        try:
-            if id > 0:
-                conta  = contas[id]
-            else:
-                return jsonify({"status": 'FAIL', "valor_depositado": 0, 'mensagem': 'Conta inexistente.'}), 404
-        except:
-            return jsonify({"status": 'FAIL', "valor_depositado": 0, 'mensagem': 'Conta inexistente.'}), 404
-        conta.deposito(valor)
+    conta = getConta(id)
+    if conta is not None:
         return jsonify({"id": conta.id, "saldo": conta.saldo})
     else:
-        return jsonify({"status": 'FAIL', "valor_depositado": 0, 'mensagem': 'Valor deve ser um número e maior que 0.'}), 406
+        return jsonify({"status": "FAIL", "mensagem": "Conta inexistente."}), 404
+
+@app.route("/contas/<id>", methods=["POST"])
+def post_deposito_saldo_conta(id):
+    conta = getConta(id)
+    if conta is not None:
+        valor = request.form["valor"]
+        json, error_code = conta.deposito(valor)
+        return jsonify(json), error_code
+    else:
+        return jsonify({"status": "FAIL", "mensagem": "Conta inexistente."}), 404
    
 
-@app.route("/contas/<id>", methods=['PUT'])
+@app.route("/contas/<id>", methods=["PUT"])
 def put_saque_saldo_conta(id):
-    try:
-        id = int(id)
-        if id < 0:
-            return jsonify({"status": 'FAIL', "valor_sacado": 0, 'mensagem': 'Conta inexistente.'}), 404
-    except:
-        return jsonify({"status": 'FAIL', "valor_sacado": 0, 'mensagem': 'Conta inexistente.'}), 404
-    try:
-        valor = float(request.form['valor'])
-        conta  = contas[id]
-        if valor <= conta.saldo and valor > 0:
-            conta.saque(valor)
-            return jsonify({"id": conta.id, "saldo": conta.saldo})
-        return jsonify({"status": 'FAIL', "valor_sacado": 0, 'mensagem': 'Saldo Insuficiente.'}), 406
-    except ValueError:
-        return jsonify({"status": 'FAIL', "valor_sacado": 0, 'mensagem': 'Valor deve ser um número e maior que 0.'}), 500
-    except IndexError:
-        return jsonify({"status": 'FAIL', "valor_sacado": 0, 'mensagem': 'Conta inexistente.'}), 404
+    conta = getConta(id)
+    if conta is not None:
+        valor = request.form["valor"]
+        json, error_code = conta.saque(valor)
+        return jsonify(json), error_code
+    else:
+        return jsonify({"status": "FAIL", "mensagem": "Conta inexistente."}), 404
 
-
-@app.route("/contas/transferencia/<conta_origem>/<conta_destino>", methods=['POST'])
+@app.route("/contas/transferencia/<conta_origem>/<conta_destino>", methods=["POST"])
 def post_transferencia_contas(conta_origem, conta_destino):
-    try:
-        conta_origem = int(conta_origem)
-        if conta_origem < 0:
-            return jsonify({"status": 'FAIL', "valor_transferido": 0, 'mensagem': 'Conta inexistente.'}), 404
-    except:
-        return jsonify({"status": 'FAIL', "valor_transferido": 0, 'mensagem': 'Conta inexistente.'}), 404
-    try:
-        conta_destino = int(conta_destino)
-        if conta_destino < 0:
-            return jsonify({"status": 'FAIL', "valor_transferido": 0, 'mensagem': 'Conta inexistente.'}), 404
-    except:
-        return jsonify({"status": 'FAIL', "valor_transferido": 0, 'mensagem': 'Conta inexistente.'}), 404
-    try:
-        valor = float(request.form['valor'])
-    except:
-        return jsonify({"status": 'FAIL', "valor_transferido": 0, 'mensagem': 'Valor deve ser um número e maior que 0.'}), 500
-    if contas[conta_origem].saldo >= valor and valor > 0:
-        contas[conta_origem].saldo -= valor
-        contas[conta_destino].saldo += valor
-        return jsonify({'status': 'OK', 'valor_transferido': valor})
-    return jsonify({"status": 'FAIL', "valor_transferido": 0, 'mensagem': 'Saldo Insuficiente.'}), 406
+    conta_origem = getConta(conta_origem)
+    conta_destino = getConta(conta_destino)
+    if conta_origem is not None and conta_destino is not None:
+        valor = request.form["valor"]
+        json_origem, error_code_origem = conta_origem.saque(valor)
+        if error_code_origem is 200:
+            json_destino, error_code_destino = conta_destino.deposito(valor)
+            return jsonify(json_destino), error_code_destino
+        else:
+            return jsonify(json_origem), error_code_origem
+    else:
+        return jsonify({"status": "FAIL", "valor_transferido": 0, "mensagem": "Conta inexistente."}), 404
 
 
 if __name__ == "__main__":
